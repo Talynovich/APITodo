@@ -28,7 +28,7 @@ export const createTask = async (req, res) => {
   const newTask = {
     id: tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1,
     title,
-    completed: false, // Исправил: булево значение лучше чем строка 'false'
+    completed: false,
   }
 
   tasks.push(newTask)
