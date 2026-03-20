@@ -26,7 +26,7 @@ export const createTask = async (req, res) => {
 
   const tasks = await readTasks()
   const newTask = {
-    id: tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1,
+    id: tasks.length + 1,
     title,
     completed: false,
   }

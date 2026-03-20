@@ -1,6 +1,6 @@
 import express from 'express'
 
-import tasksRouter from './routes/tasks.js'
+import tasksRouter from './routes/tasks.route.js'
 
 const app = express()
 const port = 3000
