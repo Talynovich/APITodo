@@ -1,19 +1,18 @@
-import { readTasks, writeTasks } from '../utils/fileHandler.js'
+import * as taskService from '../services/task.service.js'
 
 export const getAllTasks = async (req, res) => {
-  const tasks = await readTasks()
+  const tasks = await taskService.getAllTasks()
   res.json(tasks)
 }
 
 export const getTaskById = async (req, res) => {
   const id = +req.params.taskId
-  const tasks = await readTasks()
-  const task = tasks.find((t) => t.id === id)
+  const task = await taskService.getTaskById(id)
 
   if (!task) {
     return res
       .status(404)
-      .json({ message: 'No task with id ' + req.params.taskId })
+      .json({ message: `No task with id ${id}` })
   }
   res.json(task)
 }
@@ -24,48 +23,32 @@ export const createTask = async (req, res) => {
     return res.status(400).json({ message: 'Title is required' })
   }
 
-  const tasks = await readTasks()
-  const newTask = {
-    id: tasks.length + 1,
-    title,
-    completed: false,
-  }
-
-  tasks.push(newTask)
-  await writeTasks(tasks)
+  const newTask = await taskService.createTask(title)
   res.status(201).json(newTask)
 }
 
 export const updateTask = async (req, res) => {
   const id = +req.params.taskId
-  const tasks = await readTasks()
-  const task = tasks.find((t) => t.id === id)
+  const updatedTask = await taskService.updateTask(id, req.body)
 
-  if (!task) {
+  if (!updatedTask) {
     return res
       .status(404)
-      .json({ message: 'No task with id ' + req.params.taskId })
+      .json({ message: `No task with id ${id}` })
   }
 
-  if (req.body.completed !== undefined) task.completed = req.body.completed
-  if (req.body.title !== undefined) task.title = req.body.title
-
-  await writeTasks(tasks)
-  res.json(task)
+  res.json(updatedTask)
 }
 
 export const deleteTask = async (req, res) => {
   const id = +req.params.taskId
-  const tasks = await readTasks()
-  const index = tasks.findIndex((t) => t.id === id)
+  const deletedTask = await taskService.deleteTask(id)
 
-  if (index === -1) {
+  if (!deletedTask) {
     return res
       .status(404)
-      .json({ message: 'No task with id ' + req.params.taskId })
+      .json({ message: `No task with id ${id}` })
   }
 
-  const [deletedTask] = tasks.splice(index, 1)
-  await writeTasks(tasks)
   res.json(deletedTask)
 }
