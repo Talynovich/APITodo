@@ -20,7 +20,7 @@ export const updateTask = async (id, updates) => {
       ...(updates.title !== undefined && { title: updates.title }),
       ...(updates.completed !== undefined && { completed: updates.completed }),
     },
-    { new: true } // вернуть обновлённый документ
+    { new: true }
   )
 }
 
